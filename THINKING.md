@@ -60,8 +60,10 @@ Created the project skeleton. No queue logic yet, just getting the structure in 
 ### [22:15]
 Set up the main queue types and shared state using one Mutex around queue state and a Condvar for worker wakeups. enqueue assigns ids and pushes tasks into the shared heap, while shutdown flips a flag and waits for worker threads to finish.
 
-### [HH:MM]
+### [22:34]
+Implemented the worker loop where workers wait on the Condvar when there is no work and delayed tasks stay in the heap until ready_at instead of holding a worker slot failed tasks are pushed back into the heap with exponential backoff, and once retries are exhausted they go into the dead letter queue
 
+I also made the shutdown behavior explicit where workers finish whatever is already running, but queued/delayed/retry-waiting tasks are not started once shutdown begins since I did not want shutdown blocked by something sitting in backoff for several minutes
 ### [HH:MM]
 
 ### [HH:MM]
@@ -70,6 +72,8 @@ Set up the main queue types and shared state using one Mutex around queue state 
 
 <!-- Optional. Any docs, articles, past code, or language references you looked at.
      A one-line note on what you took from each is enough. -->
+https://doc.rust-lang.org/std/sync/struct.Condvar.html - I used it for ordering tasks by ready_at and had to reverse Ord since BinaryHeap is a max-heap
+https://doc.rust-lang.org/std/sync/struct.Condvar.html - I used it for worker sleep/wakeup so workers don't poll the queue
 
 ## Retrospective
 
