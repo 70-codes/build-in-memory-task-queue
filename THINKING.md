@@ -72,7 +72,7 @@ I also made the shutdown behavior explicit where workers finish whatever is alre
 
 <!-- Optional. Any docs, articles, past code, or language references you looked at.
      A one-line note on what you took from each is enough. -->
-https://doc.rust-lang.org/std/sync/struct.Condvar.html - I used it for ordering tasks by ready_at and had to reverse Ord since BinaryHeap is a max-heap
+https://doc.rust-lang.org/std/collections/struct.BinaryHeap.html - I used it for ordering tasks by ready_at and had to reverse Ord since BinaryHeap is a max-heap
 https://doc.rust-lang.org/std/sync/struct.Condvar.html - I used it for worker sleep/wakeup so workers don't poll the queue
 
 ## Retrospective
@@ -85,3 +85,7 @@ https://doc.rust-lang.org/std/sync/struct.Condvar.html - I used it for worker sl
      - What would you do differently with more time?
      - What surprised you about this problem?
      - Anything you tried and threw away? Why? -->
+
+- The weakest part is shutdown drops queued, delayed and retry-waiting tasks, which is okay for this in-memory implementation but in production I would probably need persistence or a clearer way to recover unfinished work
+- The single Mutex around shared state could also become a bottleneck with a lot of concurrent producers and workers
+- What surprised me was that delayed tasks and retry backoff could use the same ready_at + BinaryHeap scheduling mechanism
