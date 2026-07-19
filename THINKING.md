@@ -57,7 +57,8 @@ Need Condvar so enqueue can wake sleeping workers when a new earlier task arrive
 Read the task and settled on worker threads + one shared scheduled queue.
 Created the project skeleton. No queue logic yet, just getting the structure in place before I start with task/state types.
 
-### [HH:MM]
+### [22:15]
+Set up the main queue types and shared state using one Mutex around queue state and a Condvar for worker wakeups. enqueue assigns ids and pushes tasks into the shared heap, while shutdown flips a flag and waits for worker threads to finish.
 
 ### [HH:MM]
 
