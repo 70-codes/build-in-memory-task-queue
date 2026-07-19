@@ -64,7 +64,9 @@ Set up the main queue types and shared state using one Mutex around queue state 
 Implemented the worker loop where workers wait on the Condvar when there is no work and delayed tasks stay in the heap until ready_at instead of holding a worker slot failed tasks are pushed back into the heap with exponential backoff, and once retries are exhausted they go into the dead letter queue
 
 I also made the shutdown behavior explicit where workers finish whatever is already running, but queued/delayed/retry-waiting tasks are not started once shutdown begins since I did not want shutdown blocked by something sitting in backoff for several minutes
-### [HH:MM]
+### [23:35]
+Finished the demo runner covering all seven requirements with timestamped output and assertions, tested concurrency limits, delayed execution, retries/backoff, dead letters, shutdown and concurrent enqueue
+I also finished the README with setup/run instructions and changed the concurrent enqueue check to wait with a deadline instead of depending on a fixed sleep since that could be flaky on a slower machine
 
 ### [HH:MM]
 
